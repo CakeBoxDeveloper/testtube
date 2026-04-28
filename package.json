@@ -1,0 +1,41 @@
+{
+  "name": "cascade",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "firebase": "^10.14.1",
+    "firebase-admin": "^13.0.2",
+    "lottie-react": "^2.4.0",
+    "html2canvas": "^1.4.1",
+    "zustand": "^5.0.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.18.0",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
+    "dompurify": "^3.2.3",
+    "isomorphic-dompurify": "^2.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "@types/dompurify": "^3.2.0",
+    "typescript": "^5.7.3",
+    "tailwindcss": "^3.4.17",
+    "postcss": "^8.5.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^15.1.6"
+  },
+  "packageManager": "yarn@4.10.3+sha512.c38cafb5c7bb273f3926d04e55e1d8c9dfa7d9c3ea1f36a4868fa028b9e5f72298f0b7f401ad5eb921749eb012eb1c3bb74bf7503df3ee43fd600d14a018266f"
+}
