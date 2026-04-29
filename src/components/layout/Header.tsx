@@ -4,6 +4,7 @@ import { ICONS } from "@/lib/assets";
 import { Icon } from "@/components/ui/Icon";
 import { IconButton } from "@/components/ui/IconButton";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { ModuleSwitch } from "./ModuleSwitch";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useAuthOverlayStore } from "@/stores/useAuthOverlayStore";
 import { useHydrated } from "@/hooks/useHydrated";
@@ -24,19 +25,21 @@ export function Header({ onLogoClick }: HeaderProps) {
   };
 
   return (
-    <header className="flex items-center justify-between px-4 h-[50px] shrink-0 border-b border-[var(--glass-border)]">
+    <header className="flex items-center justify-between gap-2 px-3 sm:px-4 h-[50px] shrink-0 border-b border-[var(--glass-border)]">
       <button
         type="button"
         onClick={onLogoClick}
-        className="inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-white/5"
+        className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-white/5"
         aria-label="Логотип"
       >
         <Icon src={ICONS.mse} size={20} />
       </button>
 
-      <div className="flex items-center gap-1">
+      <ModuleSwitch />
+
+      <div className="flex items-center gap-1 shrink-0">
         {visibleUser && (
-          <span className="text-[10px] text-[var(--text-tertiary)] tabular-nums mr-1">
+          <span className="text-[10px] text-[var(--text-tertiary)] tabular-nums mr-1 hidden sm:inline">
             ID {visibleUser.id}
           </span>
         )}

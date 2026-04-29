@@ -2,6 +2,10 @@ export type Gender = "male" | "female";
 export type Theme = "dark" | "light" | "auto";
 export type MonitorSkin = "heat" | "xray" | "grid";
 
+export type ModuleId = "sofia" | "proxima";
+
+export type Priority = "low" | "medium" | "high" | "critical";
+
 export interface ChatMessage {
   role: "user" | "ai";
   text: string;
@@ -15,15 +19,45 @@ export interface ChatMetadata {
   count?: number;
 }
 
-export interface Task {
+export interface ChatTab {
+  id: string;
+  module: ModuleId;
   title: string;
-  description: string;
-  priority: 0 | 1 | 2 | 3 | 4;
-  pipeline: string;
-  status: string;
-  deadline: string;
-  completedSteps: number[];
-  createdAt?: number;
+  pinned?: boolean;
+  base?: boolean;
+  createdAt: number;
+  messages: ChatMessage[];
+}
+
+export type TaskStatus = "draft" | "ready" | "error";
+
+export interface TaskStep {
+  id: string;
+  title: string;
+  description?: string;
+  parentId?: string | null;
+  level: 0 | 1; // 0 = main step, 1 = substep
+  completed: boolean;
+  order: number;
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  /** Source-of-truth markdown pipeline (AI-generated). When present, steps are derived from it. */
+  pipeline?: string;
+  /** Structured steps. When pipeline exists, treat as derived state; otherwise stand-alone manual steps. */
+  steps: TaskStep[];
+  priority: Priority;
+  category?: string;
+  deadline?: number | null;
+  progress: number;
+  pinned?: boolean;
+  status?: TaskStatus;
+  createdAt: number;
+  updatedAt: number;
+  completedAt?: number | null;
 }
 
 export interface TaskMetadata {
@@ -38,6 +72,32 @@ export interface Note {
   desc: string;
 }
 
+export type MaterialType = "course" | "test" | "calculator" | "workout";
+
+export interface MaterialItem {
+  id: string;
+  title: string;
+  description?: string;
+  type: MaterialType;
+  icon?: string;
+  locked?: boolean;
+  purchased?: boolean;
+  progress?: number;
+}
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description?: string;
+  unlockedAt?: number;
+  icon?: string;
+}
+
+export interface WeightEntry {
+  date: number;
+  weight: number;
+}
+
 export interface User {
   id: number;
   pin: string;
@@ -49,9 +109,9 @@ export interface User {
   pinnedChats?: string[];
   tasks_helix?: Record<string, Task>;
   taskMetadata?: Record<string, TaskMetadata>;
-  achievements?: unknown[];
+  achievements?: Achievement[];
   notes?: Note[];
-  weightData?: Record<string, unknown>;
+  weightData?: WeightEntry[];
   statsData?: Record<string, unknown>;
   bioProfile?: Record<string, unknown>;
   monitorStats?: Record<string, unknown>;

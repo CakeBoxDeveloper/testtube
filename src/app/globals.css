@@ -91,3 +91,25 @@ body {
 .icon-tinted {
   filter: var(--icon-tint);
 }
+
+/* Chat typing indicator */
+@keyframes msePulse {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-1px);
+  }
+}
+
+/* Markdown body inherits text color via tokens; spacing kept tight inside bubbles */
+.markdown-body > :first-child {
+  margin-top: 0;
+}
+.markdown-body > :last-child {
+  margin-bottom: 0;
+}
