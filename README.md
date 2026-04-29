@@ -1,44 +1,60 @@
-# Cascade — Next.js
+# Mixed Sport Elements — Next.js
 
-Перенос монолитного `cascade.html` (Mixed Sport Elements) на стек Next.js 15 + React 19 + TypeScript + Tailwind + Firebase.
+Перенос монолитного `_legacy/cascade.html` (vanilla JS + Firebase) на современный стек: Next.js 15 + React 19 + TypeScript + Tailwind + Zustand. Два модуля: **София** (здоровье, обучение) и **Проксима** (задачи).
 
 ## Стек
 
-- **Next.js 15** (App Router) + **React 19**
-- **TypeScript** в strict-режиме
-- **TailwindCSS** для стилей
-- **Zustand** для глобального состояния
-- **Firebase v10** (Firestore + Storage) — клиентский SDK через `@/lib/firebase`
-- **lottie-react** для анимаций
-- **html2canvas** для скриншотов (как в оригинале)
+- **Next.js 15** (App Router) + **React 19** + **TypeScript strict**
+- **TailwindCSS** + CSS-переменные тем
+- **Zustand** (+ `persist`) для глобального состояния
+- **firebase-admin** на сервере (через API routes), либо in-memory мок
+- **framer-motion** анимации, **react-markdown** + **DOMPurify** для чата
+- **Groq** (Llama-3.3 + Whisper) для Sofia-чата и голосового ввода
+- **Gemini** (2.0 Flash) для Proxima — генерация pipeline и AI Enhance задач
 
-## Структура
-
-```
-src/
-  app/                  # App Router: layout, страницы
-  components/           # переиспользуемые UI-компоненты
-  features/             # фичи: profile, chat, exams, materials, calculator, ...
-  hooks/                # React-хуки
-  lib/                  # firebase, assets, утилиты
-  stores/               # Zustand-сторы
-  styles/               # модульные CSS, если нужны
-public/
-  assets/               # все SVG / JSON / WEBM
-_legacy/
-  cascade.html          # оригинал — справочник, не собирается
-```
+Подробности архитектуры — в [`CLAUDE.md`](CLAUDE.md).
 
 ## Запуск
 
 ```bash
-cp .env.local.example .env.local   # подставить свой Firebase config (или оставить дефолт)
+cp .env.example .env       # ключи (.env в .gitignore)
 npm install
 npm run dev
 ```
 
 Откроется на http://localhost:3000.
 
-## Статус миграции
+`MOCK_FIREBASE=1` по умолчанию — приложение поднимется без Firestore-кредов. Чтобы получить рабочий AI: в `.env` заполни `GROQ_API_KEY` (есть бесплатный тир) и `GEMINI_API_KEY`.
 
-Скелет готов, фичи переносятся итерационно. См. план в обсуждении.
+## Скрипты
+
+```bash
+npm run dev          # dev-сервер
+npm run build        # production build
+npx tsc --noEmit     # типизация
+```
+
+## Структура
+
+```
+src/
+  app/                 App Router + API routes (только сервер ходит в БД)
+    api/
+      ai/sofia         Groq chat
+      ai/proxima       Gemini chat
+      ai/proxima/...   enhance, pipeline (структурные задачи)
+      ai/transcribe    Whisper (голосовой ввод)
+      auth/login       Логин по ID + PIN
+      users/*          CRUD пользователя
+  components/          UI-примитивы, layout, monitor, theme
+  features/            chat, browser/sofia, browser/proxima, sync, auth
+  hooks/               useHydrated, useVoiceRecorder
+  lib/                 firebase-admin, repos, ai, pipeline parser
+  stores/              useAuthStore, useTasksStore, useChatStore, useStatsStore...
+public/assets/         SVG / Lottie / WEBM из легаси
+_legacy/               оригинальные HTML-файлы (не собираются)
+```
+
+## Статус
+
+См. таблицу миграции в [`CLAUDE.md`](CLAUDE.md). Готово: auth, theme, monitor, layout, обе модули, AI-чат с историей, голосовой ввод, AI-генерация pipeline для задач, экзамены с achievements, weight tracker, backend-sync для tasks/stats. В работе: chat-history sync, materials API, modals (Leaderboard/Invite/ProductKey), function-calling в Proxima-чате.
